@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Burger — Super Delicious</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD700;
+    --yellow-bright: #FFEC00;
+    --yellow-dark: #E6B800;
+    --black: #0A0A0A;
+    --white: #FAFAFA;
+    --gray: #1a1a1a;
+    --gray-light: #2a2a2a;
+    --accent: #FF6B00;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ===== NOISE TEXTURE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 70px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--yellow);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--yellow);
+    letter-spacing: 3px;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--white); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--yellow); }
+
+  .nav-cta {
+    background: var(--yellow);
+    color: var(--black) !important;
+    padding: 0.5rem 1.4rem;
+    border-radius: 2px;
+  }
+
+  .nav-cta:hover { background: var(--yellow-bright); color: var(--black) !important; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 5% 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,215,0,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,107,0,0.08) 0%, transparent 60%);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 15vw, 12rem);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    animation: fadeDown 0.7s 0.15s ease both;
+    position: relative;
+  }
+
+  .hero h1 .gold { color: var(--yellow); }
+
+  .hero h1 .stroke {
+    -webkit-text-stroke: 2px var(--white);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.7s 0.3s ease both;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 1rem;
+    animation: fadeDown 0.7s 0.45s ease both;
+  }
+
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s, background 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-primary:hover {
+    background: var(--yellow-bright);
+    transform: translateY(-3px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* Floating badges */
+  .hero-badge {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    animation: spin 20s linear infinite;
+  }
+
+  .hero-badge-1 {
+    top: 15%; right: 8%;
+    width: 120px; height: 120px;
+  }
+
+  .hero-badge-2 {
+    bottom: 15%; left: 6%;
+    width: 90px; height: 90px;
+    animation-direction: reverse;
+  }
+
+  .badge-svg circle { fill: var(--yellow); }
+  .badge-svg text {
+    fill: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .hero-stripe {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--yellow) 0px,
+      var(--yellow) 40px,
+      var(--black) 40px,
+      var(--black) 60px
+    );
+  }
+
+  /* ===== MARQUEE ===== */
+  .marquee-wrap {
+    background: var(--yellow);
+    overflow: hidden;
+    padding: 1rem 0;
+    border-top: 3px solid var(--black);
+    border-bottom: 3px solid var(--black);
+  }
+
+  .marquee-track {
+    display: flex;
+    animation: marquee 18s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--black);
+    letter-spacing: 4px;
+    padding: 0 2rem;
+    text-transform: uppercase;
+  }
+
+  .marquee-track .dot {
+    color: rgba(0,0,0,0.35);
+    padding: 0;
+  }
+
+  /* ===== SECTION BASE ===== */
+  section { padding: 6rem 5%; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+  }
+
+  /* ===== MENU ===== */
+  #menu { background: var(--gray); }
+
+  .menu-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .tab-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+  }
+
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--black);
+  }
+
+  .menu-panel { display: none; }
+  .menu-panel.active { display: block; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .menu-item {
+    background: var(--gray);
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .menu-item:hover { background: var(--gray-light); }
+
+  .menu-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--yellow);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: bottom;
+  }
+
+  .menu-item:hover::before { transform: scaleY(1); }
+
+  .item-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+    line-height: 1.3;
+  }
+
+  .item-desc {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 0.2rem;
+  }
+
+  .item-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--yellow);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .item-price span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,215,0,0.6);
+    margin-left: 2px;
+  }
+
+  /* SPECIALS highlight */
+  .menu-item.featured {
+    background: rgba(255,215,0,0.07);
+    border-left: 3px solid var(--yellow);
+  }
+
+  .featured-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 0.15rem 0.5rem;
+    display: inline-block;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Supplements section */
+  .suppl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.04);
+    margin-top: 2rem;
+  }
+
+  .suppl-item {
+    background: var(--gray);
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .suppl-item span:first-child {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .suppl-item .price-sm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--yellow);
+  }
+
+  /* ===== SPECIAL SANDWICHES ===== */
+  #specials { background: var(--black); }
+
+  .specials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .special-card {
+    background: var(--gray);
+    border: 1px solid rgba(255,215,0,0.12);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .special-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--yellow);
+  }
+
+  .special-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow), var(--accent));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .special-card:hover::after { transform: scaleX(1); }
+
+  .special-card .number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(255,215,0,0.08);
+    position: absolute;
+    top: 0.5rem; right: 1rem;
+    line-height: 1;
+  }
+
+  .special-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+
+  .special-card .price-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--yellow);
+    line-height: 1;
+    position: relative;
+  }
+
+  .special-card .price-big .da {
+    font-size: 1.2rem;
+    color: rgba(255,215,0,0.6);
+  }
+
+  /* ===== ABOUT STRIP ===== */
+  .about-strip {
+    background: var(--yellow);
+    padding: 4rem 5%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+  }
+
+  .stat-block { text-align: center; }
+
+  .stat-block .number-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .stat-block p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.55);
+    margin-top: 0.3rem;
+  }
+
+  /* ===== CONTACT ===== */
+  #contact {
+    background: var(--gray);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+    min-height: 60vh;
+  }
+
+  .contact-left {
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .contact-right {
+    background: var(--yellow);
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-right::before {
+    content: 'GOLDEN BURGER';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(0,0,0,0.05);
+    position: absolute;
+    right: -2rem;
+    bottom: 1rem;
+    letter-spacing: 4px;
+    white-space: nowrap;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+
+  .contact-icon {
+    width: 44px; height: 44px;
+    background: var(--black);
+    color: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  }
+
+  .contact-item-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.45);
+    margin-bottom: 0.2rem;
+  }
+
+  .contact-item-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--black);
+  }
+
+  .order-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--black);
+    color: var(--yellow);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 1.2rem 2rem;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: background 0.2s;
+    width: fit-content;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .order-btn:hover { background: #111; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--black);
+    border-top: 2px solid rgba(255,215,0,0.2);
+    padding: 2rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    letter-spacing: 3px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }
+
+  .social-links { display: flex; gap: 1rem; }
+
+  .social-link {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(255,215,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--yellow);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .social-link:hover {
+    background: var(--yellow);
+    color: var(--black);
+    border-color: var(--yellow);
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--yellow) 0, var(--yellow) 20px,
+      transparent 20px, transparent 30px
+    );
+    opacity: 0.3;
+    margin: 2rem 0;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+
+    .hero h1 { font-size: clamp(4rem, 18vw, 7rem); }
+
+    #contact {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-left, .contact-right {
+      padding: 3rem 5%;
+    }
+
+    .hero-badge { display: none; }
+
+    .specials-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">Golden<span>Burger</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#specials">Spéciaux</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="tel:0540566103" class="nav-cta">Commander</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+
+  <!-- Rotating badge 1 -->
+  <div class="hero-badge hero-badge-1">
+    <svg class="badge-svg" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="58" fill="#FFD700"/>
+      <path id="circlePath1" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="none"/>
+      <text>
+        <textPath href="#circlePath1" startOffset="0%">★ SUPER DELICIOUS ★ FRESH DAILY ★ ORDER NOW ★</textPath>
+      </text>
+      <text x="60" y="57" text-anchor="middle" fill="#0A0A0A" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px">GOLDEN</text>
+      <text x="60" y="73" text-anchor="middle" fill="#0A0A0A" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px">BURGER</text>
+    </svg>
+  </div>
+
+  <!-- Rotating badge 2 -->
+  <div class="hero-badge hero-badge-2">
+    <svg class="badge-svg" viewBox="0 0 90 90">
+      <circle cx="45" cy="45" r="43" fill="#FF6B00"/>
+      <path id="circlePath2" d="M 45,45 m -33,0 a 33,33 0 1,1 66,0 a 33,33 0 1,1 -66,0" fill="none"/>
+      <text>
+        <textPath href="#circlePath2" startOffset="0%" fill="#FAFAFA">✦ CONSTANTINE ✦ ALGERIA ✦ BEST ✦</textPath>
+      </text>
+      <text x="45" y="52" text-anchor="middle" fill="#FAFAFA" style="font-family:'Bebas Neue',sans-serif;font-size:18px">🍔</text>
+    </svg>
+  </div>
+
+  <div class="hero-tag">★ Constantine's Finest Fast Food ★</div>
+
+  <h1>
+    <span class="gold">Golden</span><br>
+    <span class="stroke">Burger</span>
+  </h1>
+
+  <p class="hero-sub">Super Delicious — Every Single Time</p>
+
+  <div class="hero-cta-group">
+    <a href="#menu" class="btn-primary">Voir le Menu</a>
+    <a href="tel:0540566103" class="btn-outline">Commander ☎</a>
+  </div>
+
+  <div class="hero-stripe"></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Sandwichs</span><span class="dot">◆</span>
+    <span>Burgers</span><span class="dot">◆</span>
+    <span>Plats</span><span class="dot">◆</span>
+    <span>Spéciaux</span><span class="dot">◆</span>
+    <span>Livraison</span><span class="dot">◆</span>
+    <span>Fresh Daily</span><span class="dot">◆</span>
+    <span>Golden Burger</span><span class="dot">◆</span>
+    <span>Constantine</span><span class="dot">◆</span>
+    <!-- duplicate for seamless loop -->
+    <span>Sandwichs</span><span class="dot">◆</span>
+    <span>Burgers</span><span class="dot">◆</span>
+    <span>Plats</span><span class="dot">◆</span>
+    <span>Spéciaux</span><span class="dot">◆</span>
+    <span>Livraison</span><span class="dot">◆</span>
+    <span>Fresh Daily</span><span class="dot">◆</span>
+    <span>Golden Burger</span><span class="dot">◆</span>
+    <span>Constantine</span><span class="dot">◆</span>
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="about-strip">
+  <div class="stat-block">
+    <div class="number-big">100%</div>
+    <p>Ingrédients frais</p>
+  </div>
+  <div class="stat-block">
+    <div class="number-big">20+</div>
+    <p>Items au menu</p>
+  </div>
+  <div class="stat-block">
+    <div class="number-big">150<small style="font-size:1.5rem">DA</small></div>
+    <p>Prix de départ</p>
+  </div>
+  <div class="stat-block">
+    <div class="number-big">7/7</div>
+    <p>Ouvert chaque jour</p>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <p class="section-label">◆ Ce qu'on vous propose</p>
+  <h2 class="section-title">Notre Menu</h2>
+
+  <div class="menu-tabs">
+    <button class="tab-btn active" onclick="switchTab('sandwish')">Sandwichs</button>
+    <button class="tab-btn" onclick="switchTab('burgers')">Burgers</button>
+    <button class="tab-btn" onclick="switchTab('plats')">Plats</button>
+    <button class="tab-btn" onclick="switchTab('supplements')">Suppléments</button>
+    <button class="tab-btn" onclick="switchTab('sauces')">Sauces</button>
+    <button class="tab-btn" onclick="switchTab('boissons')">Boissons</button>
+  </div>
+
+  <!-- SANDWICHS -->
+  <div class="menu-panel active" id="sandwish">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div><div class="item-name">Frite</div></div>
+        <div class="item-price">150<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette</div></div>
+        <div class="item-price">150<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Kebda Sauce</div></div>
+        <div class="item-price">320<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Merguez Sauce</div></div>
+        <div class="item-price">320<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Escalope Sauce</div></div>
+        <div class="item-price">320<span>DA</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label" style="margin-bottom:1rem">◆ Frite Omelette — Variantes</p>
+
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Viande Hachée</div></div>
+        <div class="item-price">230<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Poulet Mariné</div></div>
+        <div class="item-price">270<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Merguez</div></div>
+        <div class="item-price">270<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Varié Poulet</div></div>
+        <div class="item-price">330<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Poulet Kebda</div></div>
+        <div class="item-price">330<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette Poulet Haché</div></div>
+        <div class="item-price">330<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Frite Omelette 3 Fromages</div></div>
+        <div class="item-price">400<span>DA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BURGERS -->
+  <div class="menu-panel" id="burgers">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div>
+          <div class="item-name">Classique</div>
+          <div class="item-desc">Le burger signature</div>
+        </div>
+        <div class="item-price">220<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="item-name">Cheeseburger Poulet Haché</div>
+        </div>
+        <div class="item-price">240<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="item-name">Cheeseburger Viande Hachée</div>
+        </div>
+        <div class="item-price">240<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="item-name">Cheeseburger Double Viande Hachée</div>
+        </div>
+        <div class="item-price">320<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="item-name">Cheeseburger Double Poulet Haché</div>
+        </div>
+        <div class="item-price">320<span>DA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLATS -->
+  <div class="menu-panel" id="plats">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div><div class="item-name">Plat Frite</div></div>
+        <div class="item-price">150<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Frite Omelette</div></div>
+        <div class="item-price">200<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Salade</div></div>
+        <div class="item-price">200<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Viande Hachée</div></div>
+        <div class="item-price">330<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Poulet Mariné</div></div>
+        <div class="item-price">380<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Merguez Sauce</div></div>
+        <div class="item-price">450<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Kebda Sauce</div></div>
+        <div class="item-price">450<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Poulet à la Crème</div></div>
+        <div class="item-price">430<span>DA</span></div>
+      </div>
+      <div class="menu-item">
+        <div><div class="item-name">Plat Varié</div></div>
+        <div class="item-price">450<span>DA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPLEMENTS -->
+  <div class="menu-panel" id="supplements">
+    <p class="section-label" style="margin-bottom:1rem">◆ Viandes & Protéines</p>
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Viande Hachée</span><span class="price-sm">80 DA</span></div>
+      <div class="suppl-item"><span>Poulet Mariné</span><span class="price-sm">120 DA</span></div>
+      <div class="suppl-item"><span>Merguez</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Kebab</span><span class="price-sm">100 DA</span></div>
+      <div class="suppl-item"><span>Thon</span><span class="price-sm">120 DA</span></div>
+      <div class="suppl-item"><span>Tranche Escalope</span><span class="price-sm">160 DA</span></div>
+      <div class="suppl-item"><span>Brik Escalope</span><span class="price-sm">300 DA</span></div>
+      <div class="suppl-item"><span>Tranche Viande</span><span class="price-sm">250 DA</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label" style="margin-bottom:1rem">◆ Fromages</p>
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Fromage Normal</span><span class="price-sm">25 DA</span></div>
+      <div class="suppl-item"><span>Fromage Kiri</span><span class="price-sm">90 DA</span></div>
+      <div class="suppl-item"><span>Fromage Camembert</span><span class="price-sm">60–70 DA</span></div>
+      <div class="suppl-item"><span>Fromage Chef</span><span class="price-sm">150 DA</span></div>
+      <div class="suppl-item"><span>Fromage à la Crème Ail</span><span class="price-sm">183 DA</span></div>
+      <div class="suppl-item"><span>Fromage à la Crème Camembert</span><span class="price-sm">183 DA</span></div>
+      <div class="suppl-item"><span>Fromage Gruyère / Rouge / Cheddar</span><span class="price-sm">183 DA</span></div>
+    </div>
+  </div>
+
+  <!-- SAUCES -->
+  <div class="menu-panel" id="sauces">
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Sauce Camembert</span><span class="price-sm">50 DA</span></div>
+      <div class="suppl-item"><span>Sauce Gruyère</span><span class="price-sm">50 DA</span></div>
+      <div class="suppl-item"><span>Sauce Ketchup</span><span class="price-sm">50 DA</span></div>
+      <div class="suppl-item"><span>Sauce Fromage Rouge</span><span class="price-sm">50 DA</span></div>
+      <div class="suppl-item"><span>🌟 Golden Sauce</span><span class="price-sm">50 DA</span></div>
+    </div>
+  </div>
+
+  <!-- BOISSONS -->
+  <div class="menu-panel" id="boissons">
+    <p class="section-label" style="margin-bottom:1rem">◆ 33cl — Plastique / Verre</p>
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Schweppes</span><span class="price-sm">80 DA</span></div>
+      <div class="suppl-item"><span>Coca Cola</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Jus Ifruit</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Hamoud</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Eau</span><span class="price-sm">30 DA</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label" style="margin-bottom:1rem">◆ Canette</p>
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Schweppes Gold</span><span class="price-sm">80 DA</span></div>
+      <div class="suppl-item"><span>Coca Cola</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Schweppes</span><span class="price-sm">70 DA</span></div>
+      <div class="suppl-item"><span>Hamoud</span><span class="price-sm">70 DA</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label" style="margin-bottom:1rem">◆ 1 Litre</p>
+    <div class="suppl-grid">
+      <div class="suppl-item"><span>Schweppes</span><span class="price-sm">120 DA</span></div>
+      <div class="suppl-item"><span>Coca Cola</span><span class="price-sm">100 DA</span></div>
+      <div class="suppl-item"><span>Fanta</span><span class="price-sm">100 DA</span></div>
+      <div class="suppl-item"><span>Hamoud</span><span class="price-sm">100 DA</span></div>
+      <div class="suppl-item"><span>Pepsi</span><span class="price-sm">100 DA</span></div>
+      <div class="suppl-item"><span>Jus Ifruit</span><span class="price-sm">150 DA</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIAL SANDWICHES -->
+<section id="specials">
+  <p class="section-label">◆ La sélection du chef</p>
+  <h2 class="section-title">Spécial <span style="color:var(--yellow)">Golden</span></h2>
+
+  <div class="specials-grid">
+
+    <div class="special-card featured">
+      <div class="number">01</div>
+      <div class="featured-tag">★ Bestseller</div>
+      <h3>Sandwich Complet Viande</h3>
+      <div class="price-big">560 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">02</div>
+      <h3>Sandwich Complet Poulet</h3>
+      <div class="price-big">480 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">03</div>
+      <h3>Sandwich Complet Merguez</h3>
+      <div class="price-big">600 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">04</div>
+      <h3>Sandwich Complet Fromage</h3>
+      <div class="price-big">500 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">05</div>
+      <h3>Sandwich Mélange Poulet Viande</h3>
+      <div class="price-big">600 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card featured">
+      <div class="number">06</div>
+      <div class="featured-tag">★ Must Try</div>
+      <h3>Big Burger</h3>
+      <div class="price-big">600 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">07</div>
+      <h3>Paimpita Escalope</h3>
+      <div class="price-big">420 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card">
+      <div class="number">08</div>
+      <h3>Paimpita Kebda</h3>
+      <div class="price-big">420 <span class="da">DA</span></div>
+    </div>
+
+    <div class="special-card featured" style="grid-column: span 1;">
+      <div class="number">09</div>
+      <div class="featured-tag">★ Premium</div>
+      <h3>Golden Burger Spécial</h3>
+      <div class="price-big">1350 <span class="da">DA</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left">
+    <p class="section-label" style="margin-bottom:0.5rem">◆ On est là pour vous</p>
+    <h2 class="section-title" style="font-size:clamp(2.5rem,5vw,4rem)">Commander<br>Maintenant</h2>
+    <p style="color:rgba(255,255,255,0.5); font-size:1rem; line-height:1.7; max-width:350px;">
+      Passez votre commande par téléphone ou retrouvez-nous sur les réseaux sociaux. Livraison & sur place disponibles.
+    </p>
+    <a href="tel:0540566103" class="order-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 5.83 5.83l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      05.40.56.61.03
+    </a>
+  </div>
+
+  <div class="contact-right">
+    <div class="contact-item">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 5.83 5.83l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-item-label">Téléphone</div>
+        <div class="contact-item-value">05.40.56.61.03</div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-item-label">Instagram</div>
+        <div class="contact-item-value">@Golden Burger</div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-item-label">Facebook</div>
+        <div class="contact-item-value">Golden Burger</div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-item-label">Horaires</div>
+        <div class="contact-item-value">Ouvert 7j/7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Golden Burger</div>
+  <p>© 2025 Golden Burger — Constantine, Algérie</p>
+  <div class="social-links">
+    <a class="social-link" href="#" title="Instagram">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <a class="social-link" href="#" title="Facebook">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      </svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.special-card, .menu-item, .stat-block').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
